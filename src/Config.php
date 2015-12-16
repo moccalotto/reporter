@@ -7,8 +7,6 @@ class Config
     protected $defaults = [
         'reportToUrl' => 'https://httpbin.org/post',
 
-        'cpuInfoFile' => '/proc/cpuinfo',
-
         'logging' => [
             'file' => 'reporter.log',
             'minLevel' => 'warning',
