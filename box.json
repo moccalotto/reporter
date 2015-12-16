@@ -1,5 +1,15 @@
 {
-    "directories": ["src", "vendor"],
+    "directories": [
+        "src",
+        "vendor/kevinlebrun/colors.php/lib/Colors",
+        "vendor/composer",
+        "vendor/nategood/commando/src"
+    ],
+    "files": [
+        "vendor/pimple/pimple/src/Pimple/Container.php",
+        "vendor/pimple/pimple/src/Pimple/ServiceProviderInterface.php"
+    ],
+
     "algorithm": "SHA1",
     "git-commit": "git-commit",
     "git-version": "git-version",
