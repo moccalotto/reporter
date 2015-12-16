@@ -18,12 +18,13 @@ $app['args'] = function ($app) {
         ->describedAs('Use a given configuration File')
         ->defaultsTo('reporter.json')
         ->file()
-        ->must(function($file) {
+        ->must(function ($file) {
             Ensure::fileIsReadable($file);
             Ensure::validJson(file_get_contents($file), sprintf(
                 'Data in "%s" is not valid json',
                 $file
             ));
+
             return true;
         });
 

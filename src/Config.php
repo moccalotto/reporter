@@ -26,7 +26,7 @@ class Config
 
         'http' => [
             'follow_location' => true,
-            'max_redirects'   => 20,
+            'max_redirects' => 20,
             'user_agent' => 'Reporter',
             'timeout' => 10,
         ],

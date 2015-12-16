@@ -30,12 +30,12 @@ class App extends Container
     protected function handleArgs()
     {
         if ($this->arg('version')) {
-            die($this['version'] . PHP_EOL);
+            die($this['version'].PHP_EOL);
         }
 
         if ($this->arg('dump-config')) {
             $this['config']->dumpToFile($this->arg('dump-config'));
-            die('Config file dumped' . PHP_EOL);
+            die('Config file dumped'.PHP_EOL);
         }
     }
 
@@ -53,7 +53,7 @@ class App extends Container
         $start = microtime(true);
 
         // an almost never ending while loop
-        for ($i = 0; true; $i++) {
+        for ($i = 0; true; ++$i) {
 
             // The ideal starting time of this iteration
             $this_iteration_start = $start + $interval * $i;

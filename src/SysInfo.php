@@ -28,13 +28,13 @@ class SysInfo
 
     protected function cpuCountFromProcFile($file)
     {
-            $cpuinfo = file_get_contents('/proc/cpuinfo');
+        $cpuinfo = file_get_contents('/proc/cpuinfo');
 
-            if (!preg_match_all('/^processor/m', $cpuinfo, $matches)) {
-                return 1;
-            }
+        if (!preg_match_all('/^processor/m', $cpuinfo, $matches)) {
+            return 1;
+        }
 
-            return count($matches[0]);
+        return count($matches[0]);
     }
 
     protected function cpuCountOnWindows()

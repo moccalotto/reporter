@@ -17,7 +17,8 @@ class Logger
         if (defined($logLevel)) {
             return constant($logLevel);
         }
-        return (int)$logLevel;
+
+        return (int) $logLevel;
     }
 
     public function __construct($file, $minLevel)
