@@ -1,4 +1,5 @@
 {
+    "alias": "reporter.phar",
     "directories": [
         "src",
         "vendor/kevinlebrun/colors.php/lib/Colors",
