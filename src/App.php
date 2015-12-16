@@ -21,9 +21,9 @@ class App extends Container
         $this->handleArgs();
 
         if ($this->cfg('daemon.enabled')) {
-            return $this->runAsDaemon();
+            $this->runAsDaemon();
         } else {
-            return $this->sendReport();
+            $this->sendReport();
         }
     }
 
@@ -62,7 +62,7 @@ class App extends Container
             $next_iteration_start = $this_iteration_start + $interval;
 
             // Send the report. This may take a few seconds.
-            yield $this->sendReport();
+            $this->sendReport();
 
             // Sleep until next iteration should start
             time_sleep_until($next_iteration_start);
@@ -82,7 +82,7 @@ class App extends Container
             sprintf('X-Signature: %s', $signature),
         ];
 
-        return $this['http']->makeRequest(
+        $this['http']->makeRequest(
             $url,
             $payload,
             $headers,
