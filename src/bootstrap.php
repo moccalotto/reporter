@@ -30,8 +30,7 @@ $app['args'] = function ($app) {
 
     $args->option('d')
         ->aka('dump-config')
-        ->describedAs('Dump the complete config to this file')
-        ->boolean();
+        ->describedAs('Dump the complete config to this file');
 
     $args->option('v')
         ->aka('version')
