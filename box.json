@@ -1,0 +1,13 @@
+{
+    "directories": ["src"],
+    "algorithm": "SHA1",
+    "git-commit": "git-commit",
+    "git-version": "git-version",
+    "banner": "Reporter by Moccalotto",
+    "chmod": "0755",
+    "compression": "GZ",
+    "compactors": ["Herrera\\Box\\Compactor\\Php"],
+    "main": "bin/main",
+    "output": "output/reporter.phar",
+    "stub": true
+}
