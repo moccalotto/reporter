@@ -44,7 +44,6 @@ $app = new App([
     },
 ]);
 
-
 $app['http.config'] = [
     'http' => [
         'user_agent' => $app->cfg('http.user_agent'),
