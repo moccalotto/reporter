@@ -2,11 +2,26 @@
 
 namespace Moccalotto\Reporter;
 
+/**
+ * Http service
+ */
 class Http
 {
+    /**
+     * @var array
+     */
     protected $contextOptionDefaults;
+
+    /**
+     * @var App
+     */
     protected $app;
 
+    /**
+     * Constructor.
+     *
+     * @param App $app
+     */
     public function __construct(App $app)
     {
         $this->app = $app;
@@ -16,6 +31,16 @@ class Http
         ];
     }
 
+    /**
+     * Make an HTTP request.
+     *
+     * @param string $url
+     * @param string|array $content
+     * @param array $headers
+     * @param string $method
+     *
+     * @return string
+     */
     public function makeRequest($url, $content = null, $headers = [], $method = 'GET')
     {
         $context_options = array_replace_recursive($this->contextOptionDefaults, [
