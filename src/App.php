@@ -4,18 +4,39 @@ namespace Moccalotto\Reporter;
 
 use Pimple\Container;
 
+/**
+ * App class.
+ */
 class App extends Container
 {
+    /**
+     * Get a config entry (via the 'config' service)
+     *
+     * @param string $key The name of the config entry to find.
+     * @param mixed $default The default data to return in case the config entry was not set.
+     *
+     * @return mixed
+     */
     public function cfg($key, $default = null)
     {
         return $this['config']->get($key, $default);
     }
 
+    /**
+     * Get a command line argument (via the 'args' service)
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
     public function arg($key)
     {
         return $this['args'][$key];
     }
 
+    /**
+     * Run the application
+     */
     public function run()
     {
         $this->handleArgs();
