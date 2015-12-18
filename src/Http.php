@@ -51,7 +51,15 @@ class Http
             ],
         ]);
 
+        $this->app->debug('Sending report to {url}: {context_options}', compact('url', 'context_options'));
+
         $response = file_get_contents($url, false, stream_context_create($context_options));
+
+        $this->app->debug('Response from {url}: {response} [headers: {headers}]', [
+            'url'      => $url,
+            'response' => $response,
+            'headers'  => $http_response_header,
+        ]);
 
         $http_header = $http_response_header[0];
 

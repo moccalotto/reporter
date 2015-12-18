@@ -2,6 +2,7 @@
 
 namespace Moccalotto\Reporter;
 
+use Psr\Log\LoggerTrait;
 use Pimple\Container;
 use Exception;
 
@@ -10,6 +11,8 @@ use Exception;
  */
 class App extends Container
 {
+    use LoggerTrait;
+
     /**
      * Get a config entry (via the 'config' service)
      *
@@ -33,6 +36,20 @@ class App extends Container
     public function arg($key)
     {
         return $this['args'][$key];
+    }
+
+    /**
+     * Logs with an arbitrary level.
+     *
+     * @param mixed  $level
+     * @param string $message
+     * @param array  $context
+     *
+     * @return null
+     */
+    public function log($level, $message, array $context = [])
+    {
+        return $this['logger']->log($level, $message, $context);
     }
 
     /**
@@ -88,7 +105,8 @@ class App extends Container
         $start = microtime(true);
 
         // A practically endless loop
-        // 64 bit signed integers gives us 292,471,208,678 years of runtime if daemon.interval is 1 second.
+        // 64 bit signed integers gives us 292,471,208,678 years of runtime with 1-second intervals
+        // 32 bit signed integers gives us 69 years of runtime with 1-second intervals
         for ($i = 0; true; ++$i) {
 
             // The ideal starting time of this iteration
@@ -101,7 +119,7 @@ class App extends Container
             try {
                 $this->sendReport();
             } catch (Exception $e) {
-                // TODO: log the exception.
+                $this->warning('Could not send report to remote server: {message}', ['message' => $e->getMessage()]);
             }
 
             // Sleep until next iteration should start
@@ -116,7 +134,7 @@ class App extends Container
     {
         $payload = json_encode($this['sysinfo']->all());
 
-        $url = $this->cfg('reportToUrl');
+        $uri = $this->cfg('report.uri');
 
         $signature = $this['signer']->signature($payload);
 
@@ -126,7 +144,7 @@ class App extends Container
         ];
 
         $this['http']->makeRequest(
-            $url,
+            $uri,
             $payload,
             $headers,
             'POST'

@@ -40,10 +40,11 @@ $app = new App([
     },
 
     'config.defaults' => [
-        'reportToUrl' => 'https://httpbin.org/post',
+        'report' => [
+            'uri' => 'https://httpbin.org/post',
+        ],
 
         'logging' => [
-            'file' => 'reporter.log',
             'minLevel' => 'warning',
         ],
 
@@ -77,19 +78,11 @@ $app = new App([
             $app['config.defaults']
         );
     },
-]);
 
-$app['http.config'] = [
-    'http' => [
-        'user_agent' => $app->cfg('http.user_agent'),
-        'follow_location' => $app->cfg('http.follow_location', 0),
-        'follow_location' => $app->cfg('http.max_redirects', 20),
-        'timeout' => $app->cfg('http.timeout', 10),
-        'proxy' => $app->cfg('http.proxy', null),
-        'ignore_errors' => true,
-    ],
-    'ssl' => $app->cfg('https'),
-];
+    'logger' => function ($app) {
+        return new SyslogLogger($app->cfg('logging.minLevel'));
+    },
+]);
 
 $app['http'] = function ($app) {
     return new Http($app);
@@ -105,5 +98,11 @@ $app['signer'] = function ($app) {
 $app['sysinfo'] = function ($app) {
     return new SysInfo($app);
 };
+
+$app['exceptions'] = function($app) {
+    return new ExceptionHandler($app);
+};
+
+$app['exceptions']->register();
 
 return $app;
