@@ -3,6 +3,7 @@
 namespace Moccalotto\Reporter;
 
 use Pimple\Container;
+use Exception;
 
 /**
  * App class.
@@ -97,7 +98,11 @@ class App extends Container
             $next_iteration_start = $this_iteration_start + $interval;
 
             // Send the report. This may take a few seconds.
-            $this->sendReport();
+            try {
+                $this->sendReport();
+            } catch (Exception $e) {
+                // TODO: log the exception.
+            }
 
             // Sleep until next iteration should start
             time_sleep_until($next_iteration_start);
