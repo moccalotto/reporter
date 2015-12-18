@@ -6,43 +6,44 @@ use Commando\Command;
 
 require_once 'vendor/autoload.php';
 
-$app = new App();
+$app = new App([
+    'version' => '@git-version@',
 
-$app['version'] = '@git-version@';
+    'args' => function ($app) {
+        $args = new Command();
 
-$app['args'] = function ($app) {
-    $args = new Command();
+        $args->argument()
+            ->aka('config')
+            ->describedAs('Use a given configuration File')
+            ->defaultsTo('reporter.json')
+            ->file()
+            ->must(function ($file) {
+                Ensure::fileIsReadable($file);
+                Ensure::validJson(file_get_contents($file), sprintf(
+                    'Data in "%s" is not valid json',
+                    $file
+                ));
 
-    $args->argument()
-        ->aka('config')
-        ->describedAs('Use a given configuration File')
-        ->defaultsTo('reporter.json')
-        ->file()
-        ->must(function ($file) {
-            Ensure::fileIsReadable($file);
-            Ensure::validJson(file_get_contents($file), sprintf(
-                'Data in "%s" is not valid json',
-                $file
-            ));
+                return true;
+            });
 
-            return true;
-        });
+        $args->option('d')
+            ->aka('dump-config')
+            ->describedAs('Dump the complete config to this file');
 
-    $args->option('d')
-        ->aka('dump-config')
-        ->describedAs('Dump the complete config to this file');
+        $args->option('v')
+            ->aka('version')
+            ->describedAs('Get the version number')
+            ->boolean();
 
-    $args->option('v')
-        ->aka('version')
-        ->describedAs('Get the version number')
-        ->boolean();
+        return $args;
+    },
 
-    return $args;
-};
+    'config' => function ($app) {
+        return Config::fromFileIfExists($app['args']['config']);
+    },
+]);
 
-$app['config'] = function ($app) {
-    return Config::fromFileIfExists($app['args']['config']);
-};
 
 $app['http.config'] = [
     'http' => [
