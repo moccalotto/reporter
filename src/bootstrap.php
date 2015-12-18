@@ -44,13 +44,6 @@ $app['config'] = function ($app) {
     return Config::fromFileIfExists($app['args']['config']);
 };
 
-$app['logger'] = function ($app) {
-    return new Logger(
-        $app->cfg('logging.file'),
-        $app->cfg('logging.minLevel')
-    );
-};
-
 $app['http.config'] = [
     'http' => [
         'user_agent' => $app->cfg('http.user_agent'),
