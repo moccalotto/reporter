@@ -13,14 +13,14 @@ class Ensure
      * Ensure that a given condition is true.
      *
      * @param bool $condition
-     * @param string $message
+     * @param string $errorMessage
      *
      * @throws EnsureException
      */
-    public static function that($condition, $message)
+    public static function that($condition, $errorMessage)
     {
         if (!$condition) {
-            throw new EnsureException($message);
+            throw new EnsureException($errorMessage);
         }
     }
 
@@ -68,9 +68,9 @@ class Ensure
      *
      * @throws EnsureException
      */
-    public static function isResource($data, $error_message = 'Data must be a resource')
+    public static function isResource($data, $errorMessage = 'Data must be a resource')
     {
-        static::that(is_resource($data), $error_message);
+        static::that(is_resource($data), $errorMessage);
     }
 
     /**
@@ -80,9 +80,9 @@ class Ensure
      *
      * @throws EnsureException
      */
-    public static function isArray($data, $error_message = 'Data must be an array')
+    public static function isArray($data, $errorMessage = 'Data must be an array')
     {
-        static::that(is_array($data), $error_message);
+        static::that(is_array($data), $errorMessage);
     }
 
     /**
@@ -92,24 +92,24 @@ class Ensure
      *
      * @throws EnsureException
      */
-    public static function isObject($data, $error_message = 'Data must be an object')
+    public static function isObject($data, $errorMessage = 'Data must be an object')
     {
-        static::that(is_object($data), $error_message);
+        static::that(is_object($data), $errorMessage);
     }
 
     /**
      * Ensure that a string contains valid json
      *
      * @param string $jsonString
-     * @param string $error_message
+     * @param string $errorMessage
      *
      * @throws EnsureException
      */
-    public static function validJson($jsonString, $error_message = null)
+    public static function validJson($jsonString, $errorMessage = null)
     {
         $data = json_decode($jsonString, true);
 
-        static::isEqual(json_last_error(), JSON_ERROR_NONE, $error_message ?: sprintf(
+        static::isEqual(json_last_error(), JSON_ERROR_NONE, $errorMessage ?: sprintf(
             'Could not decode data json data: %s',
             json_last_error_msg()
         ));
@@ -120,32 +120,32 @@ class Ensure
      *
      * @param mixed $var1
      * @param mixed $var1
-     * @param mixed $message
+     * @param mixed $errorMessage
      *
      * @throws EnsureException
      */
-    public static function isEqual($var1, $var2, $message = 'Unexpected value')
+    public static function isEqual($var1, $var2, $errorMessage = 'Unexpected value')
     {
-        static::that($var1 == $var2, $message);
+        static::that($var1 == $var2, $errorMessage);
     }
 
     /**
      * @param string $pattern
      * @param string $string
-     * @param string|null $message
+     * @param string|null $errorMessage
      *
      * @throws EnsureException
      */
-    public static function matches($pattern, $string, $message = null)
+    public static function matches($pattern, $string, $errorMessage = null)
     {
-        if (null === $message) {
-            $message = sprintf(
+        if (null === $errorMessage) {
+            $errorMessage = sprintf(
                 'The string "%s" does not adhere to the pattern "%s"',
                 $string,
                 $pattern
             );
         }
 
-        static::that(preg_match($pattern, $string), $message);
+        static::that(preg_match($pattern, $string), $errorMessage);
     }
 }
