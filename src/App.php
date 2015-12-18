@@ -39,7 +39,7 @@ class App extends Container
      */
     public function run()
     {
-        $this->handleArgs();
+        $this->handleArgumentActions();
 
         if ($this->cfg('daemon.enabled')) {
             $this->runAsDaemon();
@@ -48,7 +48,13 @@ class App extends Container
         }
     }
 
-    protected function handleArgs()
+    /**
+     * Handle any actions determined by the arguments
+     *
+     * --version prints the version and terminates execution
+     * --dump-config [file] dumps the config variables to a file and terminates execution
+     */
+    protected function handleArgumentActions()
     {
         if ($this->arg('version')) {
             die($this['version'].PHP_EOL);
@@ -60,6 +66,13 @@ class App extends Container
         }
     }
 
+    /**
+     * Keep the app running as a daemon.
+     *
+     * The app sends a report every X seconds as defined in the daemon.interval config setting.
+     *
+     * @throws Exceptions\EnsureException if config settings are wrong
+     */
     protected function runAsDaemon()
     {
         // interval (in seconds) between sending reports.
@@ -73,7 +86,8 @@ class App extends Container
         // start of the reporting
         $start = microtime(true);
 
-        // an almost never ending while loop
+        // A practically endless loop
+        // 64 bit signed integers gives us 292,471,208,678 years of runtime if daemon.interval is 1 second.
         for ($i = 0; true; ++$i) {
 
             // The ideal starting time of this iteration
@@ -90,6 +104,9 @@ class App extends Container
         }
     }
 
+    /**
+     * Send a report to the foreign server.
+     */
     protected function sendReport()
     {
         $payload = json_encode($this['sysinfo']->all());
