@@ -158,7 +158,7 @@ class SysInfo
             'report' => [
                 'software' => $this->app['version'],
                 'timestamp' => microtime(true),
-                'nonce' => uniqid(),
+                'nonce' => mt_rand(),
             ],
         ];
     }
