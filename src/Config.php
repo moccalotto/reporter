@@ -4,53 +4,22 @@ namespace Moccalotto\Reporter;
 
 class Config
 {
-    protected $defaults = [
-        'reportToUrl' => 'https://httpbin.org/post',
-
-        'logging' => [
-            'file' => 'reporter.log',
-            'minLevel' => 'warning',
-        ],
-
-        'daemon' => [
-            'enabled' => false,
-            'interval' => 300,
-        ],
-
-        'signing' => [
-            'key' => '@git-commit@',
-            'algorithm' => 'sha256',
-        ],
-
-        'http' => [
-            'follow_location' => true,
-            'max_redirects' => 20,
-            'user_agent' => 'Reporter',
-            'timeout' => 10,
-        ],
-
-        'https' => [
-            'verify_peer' => true,
-            'verify_peer_name' => true,
-            'allow_self_signed' => false,
-        ],
-    ];
 
     protected $config = [];
 
     public function __construct(array $config)
     {
-        $this->config = array_replace($this->defaults, $config);
+        $this->config = $config;
     }
 
-    public static function fromArray($config)
+    public static function fromArray($config, array $defaults = [])
     {
-        Ensure::isArray($config, 'The json in the config file is malformed. Root element must be an object.');
+        Ensure::isArray($config, 'The root element in the config must be an object');
 
-        return new static($config);
+        return new static(array_replace($defaults, $config));
     }
 
-    public static function fromFile($file)
+    public static function fromFile($file, array $defaults = [])
     {
         Ensure::fileIsReadable($file);
 
@@ -60,16 +29,16 @@ class Config
 
         $config = json_decode($jsonString, true);
 
-        return static::fromArray($config);
+        return static::fromArray($config, $defaults);
     }
 
-    public static function fromFileIfExists($file)
+    public static function fromFileIfExists($file, array $defaults = [])
     {
         if (!file_exists($file)) {
-            return new static([]);
+            return new static($defaults);
         }
 
-        return static::fromFile($file);
+        return static::fromFile($file, $defaults);
     }
 
     public function get($key, $default = null)

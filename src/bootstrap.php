@@ -39,8 +39,43 @@ $app = new App([
         return $args;
     },
 
+    'config.defaults' => [
+        'reportToUrl' => 'https://httpbin.org/post',
+
+        'logging' => [
+            'file' => 'reporter.log',
+            'minLevel' => 'warning',
+        ],
+
+        'daemon' => [
+            'enabled' => false,
+            'interval' => 300,
+        ],
+
+        'signing' => [
+            'key' => '@git-commit@',
+            'algorithm' => 'sha256',
+        ],
+
+        'http' => [
+            'follow_location' => true,
+            'max_redirects' => 20,
+            'user_agent' => 'Reporter',
+            'timeout' => 10,
+        ],
+
+        'https' => [
+            'verify_peer' => true,
+            'verify_peer_name' => true,
+            'allow_self_signed' => false,
+        ],
+    ],
+
     'config' => function ($app) {
-        return Config::fromFileIfExists($app['args']['config']);
+        return Config::fromFileIfExists(
+            $app['args']['config'],
+            $app['config.defaults']
+        );
     },
 ]);
 
