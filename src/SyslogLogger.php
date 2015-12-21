@@ -12,25 +12,24 @@ class SyslogLogger implements LoggerInterface
 
     protected $map = [
         LogLevel::EMERGENCY => LOG_EMERG,
-        LogLevel::ALERT     => LOG_ALERT,
-        LogLevel::CRITICAL  => LOG_CRIT,
-        LogLevel::ERROR     => LOG_ERR,
-        LogLevel::WARNING   => LOG_WARNING,
-        LogLevel::NOTICE    => LOG_NOTICE,
-        LogLevel::INFO      => LOG_INFO,
-        LogLevel::DEBUG     => LOG_DEBUG,
+        LogLevel::ALERT => LOG_ALERT,
+        LogLevel::CRITICAL => LOG_CRIT,
+        LogLevel::ERROR => LOG_ERR,
+        LogLevel::WARNING => LOG_WARNING,
+        LogLevel::NOTICE => LOG_NOTICE,
+        LogLevel::INFO => LOG_INFO,
+        LogLevel::DEBUG => LOG_DEBUG,
     ];
 
-
     /**
-     * Get a one-line text-representation of a variable'
+     * Get a one-line text-representation of a variable'.
      */
     protected function textRepresentation($var)
     {
         switch (gettype($var)) {
         case 'resource':
             // Resources cannot be serialized. So we just diplsay their type.
-            return 'resource:'. get_resource_type($var);
+            return 'resource:'.get_resource_type($var);
         case 'string':
             // Ensure that the string is just a single line,
             // but without being surrounded by double quotes.
@@ -50,7 +49,7 @@ class SyslogLogger implements LoggerInterface
         // Build a replacement array with braces around the context keys
         $tokens = [];
         foreach ($context as $key => $val) {
-            $token = '{' . $key . '}';
+            $token = '{'.$key.'}';
             $tokens[$token] = $this->textRepresentation($val);
         }
 
@@ -69,7 +68,7 @@ class SyslogLogger implements LoggerInterface
     }
 
     /**
-     * Convert a PSR-3 log level to a PHP LOG_* syslog level
+     * Convert a PSR-3 log level to a PHP LOG_* syslog level.
      *
      * @param string $level
      *
@@ -81,7 +80,7 @@ class SyslogLogger implements LoggerInterface
     }
 
     /**
-     * Will this logger handle the given log level
+     * Will this logger handle the given log level.
      *
      * @param string $level
      *
@@ -98,8 +97,6 @@ class SyslogLogger implements LoggerInterface
      * @param mixed  $level
      * @param string $message
      * @param array  $context
-     *
-     * @return null
      */
     public function log($level, $message, array $context = [])
     {

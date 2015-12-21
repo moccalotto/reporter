@@ -5,14 +5,14 @@ namespace Moccalotto\Reporter;
 class Signer
 {
     /**
-     * HMAC key
+     * HMAC key.
      *
      * @var string
      */
     protected $key;
 
     /**
-     * HMAC algorith
+     * HMAC algorith.
      *
      * @var string
      */

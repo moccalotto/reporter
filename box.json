@@ -2,6 +2,7 @@
     "alias": "reporter.phar",
     "directories": [
         "src",
+        "resources",
         "vendor/kevinlebrun/colors.php/lib/Colors",
         "vendor/composer",
         "vendor/nategood/commando/src"

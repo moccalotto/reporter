@@ -12,7 +12,7 @@ class Ensure
     /**
      * Ensure that a given condition is true.
      *
-     * @param bool $condition
+     * @param bool   $condition
      * @param string $errorMessage
      *
      * @throws EnsureException
@@ -27,7 +27,7 @@ class Ensure
     /**
      * Ensure that a given file exists (and is indeed a file).
      *
-     * @param string $file  The complete path of the file
+     * @param string $file The complete path of the file
      *
      * @throws EnsureException
      */
@@ -47,7 +47,7 @@ class Ensure
     /**
      * Ensure that a file is readable.
      *
-     * @param string $file  The complete path of the file
+     * @param string $file The complete path of the file
      *
      * @throws EnsureException
      */
@@ -62,7 +62,7 @@ class Ensure
     }
 
     /**
-     * Ensure that a variable is a resource
+     * Ensure that a variable is a resource.
      *
      * @param mixed $data
      *
@@ -74,7 +74,7 @@ class Ensure
     }
 
     /**
-     * Ensure that a variable is an array
+     * Ensure that a variable is an array.
      *
      * @param mixed $data
      *
@@ -86,7 +86,7 @@ class Ensure
     }
 
     /**
-     * Ensure that a variable is an object
+     * Ensure that a variable is an object.
      *
      * @param mixed $data
      *
@@ -98,7 +98,7 @@ class Ensure
     }
 
     /**
-     * Ensure that a string contains valid json
+     * Ensure that a string contains valid json.
      *
      * @param string $jsonString
      * @param string $errorMessage
@@ -116,7 +116,7 @@ class Ensure
     }
 
     /**
-     * Ensure that two variables are equal (==)
+     * Ensure that two variables are equal (==).
      *
      * @param mixed $var1
      * @param mixed $var1
@@ -130,8 +130,8 @@ class Ensure
     }
 
     /**
-     * @param string $pattern
-     * @param string $string
+     * @param string      $pattern
+     * @param string      $string
      * @param string|null $errorMessage
      *
      * @throws EnsureException

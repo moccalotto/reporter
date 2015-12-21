@@ -13,11 +13,26 @@ class App extends Container
 {
     use LoggerTrait;
 
+    public function terminate($code)
+    {
+        die((int) $code);
+    }
+
+    public function stdout($message)
+    {
+        fwrite(STDOUT, 'reporter: '.$message.PHP_EOL);
+    }
+
+    public function stderr($message)
+    {
+        fwrite(STDERR, 'reporter: '.$message.PHP_EOL);
+    }
+
     /**
-     * Get a config entry (via the 'config' service)
+     * Get a config entry (via the 'config' service).
      *
-     * @param string $key The name of the config entry to find.
-     * @param mixed $default The default data to return in case the config entry was not set.
+     * @param string $key     The name of the config entry to find.
+     * @param mixed  $default The default data to return in case the config entry was not set.
      *
      * @return mixed
      */
@@ -27,7 +42,7 @@ class App extends Container
     }
 
     /**
-     * Get a command line argument (via the 'args' service)
+     * Get a command line argument (via the 'args' service).
      *
      * @param string $key
      *
@@ -44,8 +59,6 @@ class App extends Container
      * @param mixed  $level
      * @param string $message
      * @param array  $context
-     *
-     * @return null
      */
     public function log($level, $message, array $context = [])
     {
@@ -53,35 +66,64 @@ class App extends Container
     }
 
     /**
-     * Run the application
+     * Run the application.
      */
     public function run()
     {
-        $this->handleArgumentActions();
+        $exit_code = $this->executeArguments();
+
+        if (null !== $exit_code) {
+            $this->terminate($exit_code);
+        }
 
         if ($this->cfg('daemon.enabled')) {
             $this->runAsDaemon();
         } else {
             $this->sendReport();
         }
+
+        $this->terminate(0);
     }
 
     /**
-     * Handle any actions determined by the arguments
+     * Handle any actions determined by the arguments.
      *
-     * --version prints the version and terminates execution
-     * --dump-config [file] dumps the config variables to a file and terminates execution
+     * --version prints the version and terminates.
+     * --dump-config Prints the config json to stdout and terminates.
+     * --new-key Generates a new signing key, prints the entire config json to stdout and terminates.
      */
-    protected function handleArgumentActions()
+    protected function executeArguments()
     {
+        if ($this->arg('test')) {
+            die('test');
+        }
         if ($this->arg('version')) {
-            die($this['version'].PHP_EOL);
+            $this->stdout($this['version']);
+
+            return 0;
+        }
+
+        if ($this->arg('new-key')) {
+            $old_key = $this->cfg('signing.key');
+            $new_key = sha1(uniqid(mt_rand(), true));
+
+            $this->stderr('info: old key: '.$old_key);
+            $this->stderr('info: new key: '.$new_key);
+
+            $this['config']->set('signing.key', $new_key);
+
+            $this['config']->dumpToFile($this->arg('new-key'));
+
+            return 0;
         }
 
         if ($this->arg('dump-config')) {
             $this['config']->dumpToFile($this->arg('dump-config'));
-            die('Config file dumped'.PHP_EOL);
+
+            return 0;
         }
+
+        return;
     }
 
     /**

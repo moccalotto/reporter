@@ -3,7 +3,7 @@
 namespace Moccalotto\Reporter;
 
 /**
- * Http service
+ * Http service.
  */
 class Http
 {
@@ -34,10 +34,10 @@ class Http
     /**
      * Make an HTTP request.
      *
-     * @param string $url
+     * @param string       $url
      * @param string|array $content
-     * @param array $headers
-     * @param string $method
+     * @param array        $headers
+     * @param string       $method
      *
      * @return string
      */
@@ -56,9 +56,9 @@ class Http
         $response = file_get_contents($url, false, stream_context_create($context_options));
 
         $this->app->debug('Response from {url}: {response} [headers: {headers}]', [
-            'url'      => $url,
+            'url' => $url,
             'response' => $response,
-            'headers'  => $http_response_header,
+            'headers' => $http_response_header,
         ]);
 
         $http_header = $http_response_header[0];

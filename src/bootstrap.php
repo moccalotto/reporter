@@ -14,7 +14,7 @@ $app = new App([
 
         $args->argument()
             ->aka('config')
-            ->describedAs('Use a given configuration File')
+            ->describedAs('Use a given configuration file. Defaults to reporter.json if it exists.')
             ->defaultsTo('reporter.json')
             ->file()
             ->must(function ($file) {
@@ -29,48 +29,65 @@ $app = new App([
 
         $args->option('d')
             ->aka('dump-config')
-            ->describedAs('Dump the complete config to this file');
+            ->map(function ($file) {
+                if (null === $file) {
+                    return 'php://output';
+                }
+
+                return $file;
+            })
+            ->must(function ($file) {
+                Ensure::that(
+                    !is_dir($file),
+                    sprintf('Cannot dump config to %s. It is a directory', $file)
+                );
+
+                if (is_file($file)) {
+                    Ensure::that(
+                        is_writable($file),
+                        sprintf('Cannot dump config to %s. It is not writable', $file)
+                    );
+                }
+
+                return true;
+            })
+            ->describedAs('Dump the config to the the specified file. Defaults to stdout.');
+
+        $args->option('k')
+            ->aka('new-key')
+            ->map(function ($file) {
+                if (null === $file) {
+                    return 'php://stdout';
+                }
+
+                return $file;
+            })
+            ->must(function ($file) {
+                Ensure::that(
+                    !is_dir($file),
+                    sprintf('Cannot dump config to %s. It is a directory', $file)
+                );
+
+                if (is_file($file)) {
+                    Ensure::that(
+                        is_writable($file),
+                        sprintf('Cannot dump config to %s. It is not writable', $file)
+                    );
+                }
+
+                return true;
+            })
+            ->describedAs('Generate a new key and dump the config to the specified file. Defaults to stdout.');
 
         $args->option('v')
             ->aka('version')
-            ->describedAs('Get the version number')
-            ->boolean();
+            ->boolean()
+            ->describedAs('Get the version number');
 
         return $args;
     },
 
-    'config.defaults' => [
-        'report' => [
-            'uri' => 'https://httpbin.org/post',
-        ],
-
-        'logging' => [
-            'minLevel' => 'warning',
-        ],
-
-        'daemon' => [
-            'enabled' => false,
-            'interval' => 300,
-        ],
-
-        'signing' => [
-            'key' => '@git-commit@',
-            'algorithm' => 'sha256',
-        ],
-
-        'http' => [
-            'follow_location' => true,
-            'max_redirects' => 20,
-            'user_agent' => 'Reporter',
-            'timeout' => 10,
-        ],
-
-        'https' => [
-            'verify_peer' => true,
-            'verify_peer_name' => true,
-            'allow_self_signed' => false,
-        ],
-    ],
+    'config.defaults' => json_decode(file_get_contents('resources/config.default.json'), true),
 
     'config' => function ($app) {
         return Config::fromFileIfExists(
@@ -99,7 +116,7 @@ $app['sysinfo'] = function ($app) {
     return new SysInfo($app);
 };
 
-$app['exceptions'] = function($app) {
+$app['exceptions'] = function ($app) {
     return new ExceptionHandler($app);
 };
 
