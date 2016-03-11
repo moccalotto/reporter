@@ -74,6 +74,11 @@ $app = new App([
             })
             ->describedAs('Generate a new key and dump the config to the specified file. Defaults to stdout.');
 
+        $args->option('p')
+            ->aka('print-report')
+            ->boolean()
+            ->describedAs('Print the report to stdout instead of sending it to the remote server.');
+
         $args->option('v')
             ->aka('version')
             ->boolean()

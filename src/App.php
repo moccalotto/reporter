@@ -97,6 +97,14 @@ class App extends Container
         if ($this->arg('test')) {
             die('test');
         }
+
+        if ($this->arg('print-report')) {
+            $payload = json_encode($this['sysinfo']->all(), JSON_PRETTY_PRINT);
+            fwrite(STDOUT, $payload . PHP_EOL);
+
+            return 0;
+        }
+
         if ($this->arg('version')) {
             $this->stdout($this['version']);
 
