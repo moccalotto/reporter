@@ -13,6 +13,15 @@ class Config
         $this->config = $config;
     }
 
+    /**
+     * Create an instance from array.
+     *
+     * Merge the candidate config with the defaults.
+     *
+     * @param array $config
+     * @param array $default
+     * @return Config
+     */
     public static function fromArray($config, array $defaults = [])
     {
         Ensure::isArray($config, 'The root element in the config must be an object');
@@ -20,19 +29,33 @@ class Config
         return new static(array_replace($defaults, $config));
     }
 
+    /**
+     * Create an instance from a file
+     *
+     * Merge the config data from the file with the defaults.
+     *
+     * @param string $file The filename
+     * @param array $default
+     * @return Config
+     */
     public static function fromFile($file, array $defaults = [])
     {
         Ensure::fileIsReadable($file);
 
-        $jsonString = file_get_contents($file);
-
-        Ensure::validJson($jsonString);
-
-        $config = json_decode($jsonString, true);
+        $config = require $file;
 
         return static::fromArray($config, $defaults);
     }
 
+    /**
+     * Create an instance from a file, but do not fail if file is not accessible.
+     *
+     * Merge the config data from the file with the defaults.
+     *
+     * @param string $file The filename
+     * @param array $default
+     * @return Config
+     */
     public static function fromFileIfExists($file, array $defaults = [])
     {
         if (!file_exists($file)) {
@@ -132,6 +155,14 @@ class Config
 
     public function dumpToFile($file)
     {
-        file_put_contents($file, json_encode($this->config, JSON_PRETTY_PRINT));
+        $exported = var_export($this->config, true);
+
+        $document = <<<DOC
+<?php
+return $exported;
+
+DOC;
+
+        file_put_contents($file, $document);
     }
 }

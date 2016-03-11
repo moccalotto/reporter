@@ -14,16 +14,11 @@ $app = new App([
 
         $args->argument()
             ->aka('config')
-            ->describedAs('Use a given configuration file. Defaults to reporter.json if it exists.')
-            ->defaultsTo('reporter.json')
+            ->describedAs('Use a given configuration file. Defaults to reporter.php if it exists.')
+            ->defaultsTo('reporter.php')
             ->file()
             ->must(function ($file) {
                 Ensure::fileIsReadable($file);
-                Ensure::validJson(file_get_contents($file), sprintf(
-                    'Data in "%s" is not valid json',
-                    $file
-                ));
-
                 return true;
             });
 
@@ -87,7 +82,7 @@ $app = new App([
         return $args;
     },
 
-    'config.defaults' => json_decode(file_get_contents('resources/config.default.json'), true),
+    'config.defaults' => require 'resources/config.default.php',
 
     'config' => function ($app) {
         return Config::fromFileIfExists(

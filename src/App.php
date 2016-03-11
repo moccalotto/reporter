@@ -89,8 +89,8 @@ class App extends Container
      * Handle any actions determined by the arguments.
      *
      * --version prints the version and terminates.
-     * --dump-config Prints the config json to stdout and terminates.
-     * --new-key Generates a new signing key, prints the entire config json to stdout and terminates.
+     * --dump-config Prints the config to stdout and terminates.
+     * --new-key Generates a new signing key, prints the entire config to stdout and terminates.
      */
     protected function executeArguments()
     {
