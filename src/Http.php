@@ -3,7 +3,7 @@
 namespace Moccalotto\Reporter;
 
 /**
- * Http service.
+ * Http request service.
  */
 class Http
 {

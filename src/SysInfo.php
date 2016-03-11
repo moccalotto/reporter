@@ -2,6 +2,13 @@
 
 namespace Moccalotto\Reporter;
 
+/**
+ * SysInfo class.
+ *
+ * Gather all the system information.
+ * @TODO: rename to report
+ * @TODO: use decorator pattern
+ */
 class SysInfo
 {
     protected $app;

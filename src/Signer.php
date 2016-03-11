@@ -2,6 +2,9 @@
 
 namespace Moccalotto\Reporter;
 
+/**
+ * Signs a report so the recipient can validate the sender.
+ */
 class Signer
 {
     /**
